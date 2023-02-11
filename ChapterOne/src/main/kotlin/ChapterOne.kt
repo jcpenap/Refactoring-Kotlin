@@ -2,31 +2,27 @@ fun main(args: Array<String>) {
     println("Hello world")
 }
 
-class Movie(val title: String, private val type: MoviesTypes) {
-    fun getCharge(daysRented: Int): Double {
-        var result = 0.0
-        when (type) {
+class Movie(val title: String, private var type: Type) {
+
+    fun getCharge(daysRented: Int): Double = type.getCharge(daysRented)
+
+    fun getMovieType(): MoviesTypes = type.getCode()
+
+    fun setMovieType(typeCode: MoviesTypes) {
+        type = when (typeCode) {
             MoviesTypes.CHILDREN -> {
-                result += 2
-                if (daysRented > 2) {
-                    result += (daysRented - 2) * 1.5
-                }
-            }
-            MoviesTypes.NEW_RELEASE -> {
-                result += daysRented * 1.5
+                ChildrenType()
             }
             MoviesTypes.REGULAR -> {
-                result += 1.5
-                if (daysRented > 3) {
-                    result += (daysRented - 3) * 1.5
-                }
+                RegularType()
+            }
+            MoviesTypes.NEW_RELEASE -> {
+                NewReleaseType()
             }
         }
-        return result
     }
 
-    fun getFrequentRenterPoints(daysRented: Int): Int =
-        if ((type == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
+    fun getFrequentRenterPoints(daysRented: Int): Int = type.getFrequentRenterPoints(daysRented)
 
 }
 
@@ -58,4 +54,44 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
 
 enum class MoviesTypes {
     CHILDREN, REGULAR, NEW_RELEASE
+}
+
+abstract class Type {
+    abstract fun getCode() : MoviesTypes
+    abstract fun getCharge(daysRented: Int) : Double
+    abstract fun getFrequentRenterPoints(daysRented: Int): Int
+}
+
+class ChildrenType : Type() {
+    override fun getCode() = MoviesTypes.CHILDREN
+    override fun getCharge(daysRented: Int): Double {
+        var result = 2.0
+        if (daysRented > 2) {
+            result += (daysRented - 2) * 1.5
+        }
+        return result
+    }
+    override fun getFrequentRenterPoints(daysRented: Int): Int =
+        if ((getCode() == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
+}
+
+class RegularType : Type() {
+    override fun getCode() = MoviesTypes.REGULAR
+    override fun getCharge(daysRented: Int): Double {
+        var result = 1.5
+        if (daysRented > 3) {
+            result += (daysRented - 3) * 1.5
+        }
+        return result
+    }
+    override fun getFrequentRenterPoints(daysRented: Int): Int =
+        if ((getCode() == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
+
+}
+
+class NewReleaseType : Type() {
+    override fun getCode() = MoviesTypes.NEW_RELEASE
+    override fun getCharge(daysRented: Int): Double = daysRented * 1.5
+    override fun getFrequentRenterPoints(daysRented: Int): Int =
+        if ((getCode() == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
 }
