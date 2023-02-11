@@ -6,7 +6,27 @@ class Movie(val title: String, val type: MoviesTypes) {
 }
 
 class Rental(val movie:  Movie, val daysRented: Int) {
-
+    fun getCharge(): Double {
+        var result = 0.0
+        when (movie.type) {
+            MoviesTypes.CHILDREN -> {
+                result += 2
+                if (daysRented > 2) {
+                    result += (daysRented - 2) * 1.5
+                }
+            }
+            MoviesTypes.NEW_RELEASE -> {
+                result += daysRented * 1.5
+            }
+            MoviesTypes.REGULAR -> {
+                result += 1.5
+                if (daysRented > 3) {
+                    result += (daysRented - 3) * 1.5
+                }
+            }
+        }
+        return result
+    }
 }
 
 class Customer(private val name: String, private val rentals: Array<Rental>) {
@@ -15,7 +35,7 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         var frequentRenterPoints: Int = 0
         var result = "Rental record for $name \n"
         rentals.map {
-            var thisAmount: Double = amountFor(it)
+            var thisAmount: Double = it.getCharge()
             //add frequent renter points
             frequentRenterPoints ++
             //add bonus for a two day new release rental
@@ -30,28 +50,6 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         //add footer lines
         result += "Amount owed is $totalAmount \n"
         result += "You earned $frequentRenterPoints frequent renter points"
-        return result
-    }
-
-    private fun amountFor(aRental: Rental): Double {
-        var result = 0.0
-        when (aRental.movie.type) {
-            MoviesTypes.CHILDREN -> {
-                result += 2
-                if (aRental.daysRented > 2) {
-                    result += (aRental.daysRented - 2) * 1.5
-                }
-            }
-            MoviesTypes.NEW_RELEASE -> {
-                result += aRental.daysRented * 1.5
-            }
-            MoviesTypes.REGULAR -> {
-                result += 1.5
-                if (aRental.daysRented > 3) {
-                    result += (aRental.daysRented - 3) * 1.5
-                }
-            }
-        }
         return result
     }
 }
