@@ -2,11 +2,11 @@ fun main(args: Array<String>) {
     println("Hello world")
 }
 
-class Movie(val title: String, private var type: Type) {
+class Movie(val title: String, private var type: Type?) {
 
-    fun getCharge(daysRented: Int): Double = type.getCharge(daysRented)
+    fun getCharge(daysRented: Int): Double? = type?.getCharge(daysRented)
 
-    fun getMovieType(): MoviesTypes = type.getCode()
+    fun getMovieType(): MoviesTypes? = type?.getCode()
 
     fun setMovieType(typeCode: MoviesTypes) {
         type = when (typeCode) {
@@ -22,15 +22,15 @@ class Movie(val title: String, private var type: Type) {
         }
     }
 
-    fun getFrequentRenterPoints(daysRented: Int): Int = type.getFrequentRenterPoints(daysRented)
+    fun getFrequentRenterPoints(daysRented: Int): Int? = type?.getFrequentRenterPoints(daysRented)
 
 }
 
 class Rental(val movie:  Movie, private val daysRented: Int) {
 
-    fun getCharge(): Double = movie.getCharge(daysRented)
+    fun getCharge(): Double? = movie.getCharge(daysRented)
 
-    fun getFrequentRenterPoints(): Int = movie.getFrequentRenterPoints(daysRented)
+    fun getFrequentRenterPoints(): Int? = movie.getFrequentRenterPoints(daysRented)
 }
 
 class Customer(private val name: String, private val rentals: Array<Rental>) {
@@ -47,9 +47,9 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         return result
     }
 
-    private fun getTotalFrequentRenterPoints(): Int = rentals.sumOf { it.getFrequentRenterPoints() }
+    private fun getTotalFrequentRenterPoints(): Int? = rentals.sumOf { it.getFrequentRenterPoints() ?: 0 }
 
-    private fun getTotalCharge(): Double = rentals.sumOf { it.getCharge() }
+    private fun getTotalCharge(): Double = rentals.sumOf { it.getCharge() ?: 0.0  }
 }
 
 enum class MoviesTypes {
