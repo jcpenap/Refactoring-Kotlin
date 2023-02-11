@@ -2,7 +2,7 @@ fun main(args: Array<String>) {
     println("Hello world")
 }
 
-class Movie(val title: String, val movieType: MoviesType) {
+class Movie(val title: String, val type: MoviesTypes) {
 }
 
 class Rental(val movie:  Movie, val daysRented: Int) {
@@ -19,7 +19,7 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
             //add frequent renter points
             frequentRenterPoints ++
             //add bonus for a two day new release rental
-            if ((it.movie.movieType == MoviesType.NEW_RELEASE) && it.daysRented > 1)
+            if ((it.movie.type == MoviesTypes.NEW_RELEASE) && it.daysRented > 1)
                 frequentRenterPoints ++
 
             //show figures for this rental
@@ -33,29 +33,29 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         return result
     }
 
-    private fun amountFor(it: Rental): Double {
-        var thisAmount = 0.0
-        when (it.movie.movieType) {
-            MoviesType.CHILDREN -> {
-                thisAmount += 2
-                if (it.daysRented > 2) {
-                    thisAmount += (it.daysRented - 2) * 1.5
+    private fun amountFor(aRental: Rental): Double {
+        var result = 0.0
+        when (aRental.movie.type) {
+            MoviesTypes.CHILDREN -> {
+                result += 2
+                if (aRental.daysRented > 2) {
+                    result += (aRental.daysRented - 2) * 1.5
                 }
             }
-            MoviesType.NEW_RELEASE -> {
-                thisAmount += it.daysRented * 1.5
+            MoviesTypes.NEW_RELEASE -> {
+                result += aRental.daysRented * 1.5
             }
-            MoviesType.REGULAR -> {
-                thisAmount += 1.5
-                if (it.daysRented > 3) {
-                    thisAmount += (it.daysRented - 3) * 1.5
+            MoviesTypes.REGULAR -> {
+                result += 1.5
+                if (aRental.daysRented > 3) {
+                    result += (aRental.daysRented - 3) * 1.5
                 }
             }
         }
-        return thisAmount
+        return result
     }
 }
 
-enum class MoviesType {
+enum class MoviesTypes {
     CHILDREN, REGULAR, NEW_RELEASE
 }
