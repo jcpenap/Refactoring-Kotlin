@@ -35,7 +35,6 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         var frequentRenterPoints: Int = 0
         var result = "Rental record for $name \n"
         rentals.map {
-            var thisAmount: Double = it.getCharge()
             //add frequent renter points
             frequentRenterPoints ++
             //add bonus for a two day new release rental
@@ -43,8 +42,8 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
                 frequentRenterPoints ++
 
             //show figures for this rental
-            result += "\t ${it.movie.title} \t $thisAmount \n"
-            totalAmount += thisAmount
+            result += "\t ${it.movie.title} \t ${it.getCharge()} \n"
+            totalAmount += it.getCharge()
         }
 
         //add footer lines
