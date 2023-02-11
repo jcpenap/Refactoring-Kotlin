@@ -34,23 +34,21 @@ class Rental(val movie:  Movie, val daysRented: Int) {
 
 class Customer(private val name: String, private val rentals: Array<Rental>) {
     fun statement(): String {
-        var totalAmount: Double = 0.0
-        var frequentRenterPoints: Int = 0
         var result = "Rental record for $name \n"
         rentals.map {
-            //add frequent renter points
-            frequentRenterPoints = it.getFrequentRenterPoints()
-
             //show figures for this rental
             result += "\t ${it.movie.title} \t ${it.getCharge()} \n"
-            totalAmount += it.getCharge()
         }
 
         //add footer lines
-        result += "Amount owed is $totalAmount \n"
-        result += "You earned $frequentRenterPoints frequent renter points"
+        result += "Amount owed is ${getTotalCharge()} \n"
+        result += "You earned ${getTotalFrequentRenterPoints()} frequent renter points"
         return result
     }
+
+    private fun getTotalFrequentRenterPoints(): Int = rentals.sumOf { it.getFrequentRenterPoints() }
+
+    private fun getTotalCharge(): Double = rentals.sumOf { it.getCharge() }
 }
 
 enum class MoviesTypes {
