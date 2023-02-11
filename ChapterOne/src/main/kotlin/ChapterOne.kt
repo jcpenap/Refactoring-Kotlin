@@ -2,13 +2,10 @@ fun main(args: Array<String>) {
     println("Hello world")
 }
 
-class Movie(val title: String, val type: MoviesTypes) {
-}
-
-class Rental(val movie:  Movie, val daysRented: Int) {
-    fun getCharge(): Double {
+class Movie(val title: String, private val type: MoviesTypes) {
+    fun getCharge(daysRented: Int): Double {
         var result = 0.0
-        when (movie.type) {
+        when (type) {
             MoviesTypes.CHILDREN -> {
                 result += 2
                 if (daysRented > 2) {
@@ -28,8 +25,16 @@ class Rental(val movie:  Movie, val daysRented: Int) {
         return result
     }
 
-    fun getFrequentRenterPoints(): Int =
-        if ((movie.type == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
+    fun getFrequentRenterPoints(daysRented: Int): Int =
+        if ((type == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
+
+}
+
+class Rental(val movie:  Movie, private val daysRented: Int) {
+
+    fun getCharge(): Double = movie.getCharge(daysRented)
+
+    fun getFrequentRenterPoints(): Int = movie.getFrequentRenterPoints(daysRented)
 }
 
 class Customer(private val name: String, private val rentals: Array<Rental>) {
