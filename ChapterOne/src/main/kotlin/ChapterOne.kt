@@ -27,6 +27,9 @@ class Rental(val movie:  Movie, val daysRented: Int) {
         }
         return result
     }
+
+    fun getFrequentRenterPoints(): Int =
+        if ((movie.type == MoviesTypes.NEW_RELEASE) && daysRented > 1) 2 else 1
 }
 
 class Customer(private val name: String, private val rentals: Array<Rental>) {
@@ -36,10 +39,7 @@ class Customer(private val name: String, private val rentals: Array<Rental>) {
         var result = "Rental record for $name \n"
         rentals.map {
             //add frequent renter points
-            frequentRenterPoints ++
-            //add bonus for a two day new release rental
-            if ((it.movie.type == MoviesTypes.NEW_RELEASE) && it.daysRented > 1)
-                frequentRenterPoints ++
+            frequentRenterPoints = it.getFrequentRenterPoints()
 
             //show figures for this rental
             result += "\t ${it.movie.title} \t ${it.getCharge()} \n"
