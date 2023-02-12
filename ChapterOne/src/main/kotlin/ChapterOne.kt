@@ -2,7 +2,7 @@ fun main(args: Array<String>) {
     println("Hello world")
 }
 
-class Movie(val title: String, private var type: Type?) {
+class Movie(val title: String, val typeCode: MoviesTypes, private var type: Type?) {
 
     fun getCharge(daysRented: Int): Double? = type?.getCharge(daysRented)
 
